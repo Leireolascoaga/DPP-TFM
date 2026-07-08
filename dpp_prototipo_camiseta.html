@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DPP - ZARA Camiseta Básica</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --bg-light: #f7f7f8;
+            --bg-map: #f0f0f2;
+            --text-main: #111111;
+            --text-muted: #555555;
+            --border-color: #e5e5e5;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --radius: 8px;
+            --shadow: 0 2px 15px rgba(0,0,0,0.04);
+            --header-height: 70px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-family);
+            background-color: #d1d5db;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            color: var(--text-main);
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 414px;
+            background-color: var(--bg-color);
+            min-height: 100vh;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            position: relative;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            text-align: center;
+            height: var(--header-height);
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.98);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .brand-logo { font-size: 22px; font-weight: 800; letter-spacing: 3px; line-height: 1;}
+        .dpp-badge { font-size: 9px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-top: 6px; font-weight: 600;}
+
+        .chip-nav {
+            display: flex;
+            overflow-x: auto;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.98);
+            position: sticky;
+            top: var(--header-height);
+            z-index: 40;
+            gap: 8px;
+            border-bottom: 1px solid var(--border-color);
+            scrollbar-width: none;
+        }
+        .chip-nav::-webkit-scrollbar { display: none; }
+        
+        .chip {
+            white-space: nowrap;
+            padding: 6px 14px;
+            background: var(--bg-light);
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-decoration: none;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+        .chip:active, .chip:focus {
+            background: var(--text-main);
+            color: var(--bg-color);
+            border-color: var(--text-main);
+        }
+
+        section { 
+            padding: 32px 20px; 
+            border-bottom: 4px solid var(--bg-light);
+            scroll-margin-top: 120px;
+        }
+        section:last-child { border-bottom: none; }
+
+        h2 { font-size: 18px; margin-bottom: 16px; font-weight: 700; letter-spacing: -0.3px; text-transform: uppercase;}
+        p { font-size: 14px; line-height: 1.6; color: var(--text-muted); margin-bottom: 16px; }
+        
+        .hero-img { width: 100%; height: 420px; object-fit: cover; object-position: center 20%; display: block;}
+
+        .title-block { padding: 24px 20px 12px 20px; border-bottom: 1px solid var(--border-color); }
+        .title-block h1 { font-size: 26px; font-weight: 800; margin-bottom: 12px; letter-spacing: -0.5px;}
+        
+        .meta-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;}
+        .meta-tag { background: transparent; border: 1px solid var(--border-color); padding: 4px 10px; border-radius: 4px; font-size: 12px; color: var(--text-muted); font-weight: 600; display: flex; align-items: center; gap: 6px;}
+        .meta-tag.highlight { background: var(--text-main); color: var(--bg-color); border-color: var(--text-main); }
+        .meta-tag svg { width: 12px; height: 12px; }
+
+        .card {
+            background: var(--bg-color); border: 1px solid var(--border-color);
+            border-radius: var(--radius); padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow);
+        }
+
+        .composition-wrapper { display: flex; flex-direction: column; align-items: center; gap: 24px; margin-bottom: 24px; margin-top: 16px;}
+        .donut-container { display: flex; justify-content: center; width: 100%; }
+        .donut-chart {
+            width: 150px; height: 150px; border-radius: 50%;
+            background: conic-gradient(var(--text-main) 100%, #ccc 100% 100%);
+            display: flex; align-items: center; justify-content: center; 
+        }
+        .donut-inner {
+            width: 140px; height: 140px; background: var(--bg-color); border-radius: 50%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .donut-inner span { font-size: 22px; font-weight: 800; text-align: center; line-height: 1.1; color: var(--text-main);}
+        
+        .comp-legend { width: 100%; padding: 0 10px; }
+        .legend-item { display: flex; justify-content: space-between; align-items: flex-start; padding-top: 12px; border-top: 1px solid var(--border-color);}
+        .legend-title { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: var(--text-main);}
+        .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .legend-dot.main { background: var(--text-main); }
+        .legend-origin { font-size: 12px; color: var(--text-muted); margin-top: 4px; display: flex; align-items: center; gap: 4px;}
+
+        .accordion { display: flex; flex-direction: column; gap: 8px; }
+        .accordion-item { 
+            border: 1px solid var(--border-color); border-radius: var(--radius);
+            background: var(--bg-color); overflow: hidden; transition: all 0.3s ease;
+        }
+        .accordion-header {
+            width: 100%; padding: 16px 20px; background: transparent;
+            display: flex; justify-content: space-between; align-items: center;
+            cursor: pointer; border: none; text-align: left;
+        }
+        .accordion-title-container { display: flex; flex-direction: column; gap: 4px;}
+        .accordion-title-container span:first-child { font-size: 14px; font-weight: 700; color: var(--text-main);}
+        .accordion-subtitle { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+        .accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .accordion-content { padding: 0 20px 20px 20px; font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+        .arrow { transition: transform 0.3s; flex-shrink: 0; margin-left: 10px; width: 16px; height: 16px; color: var(--text-main);}
+        .accordion-item.active { border-color: var(--text-main); }
+        .accordion-item.active .arrow { transform: rotate(180deg); }
+        .accordion-item.active .accordion-body { max-height: 250px; } 
+
+        .impact-grid { display: flex; flex-direction: column; gap: 12px; }
+        .impact-card { 
+            background: var(--bg-color); border: 1px solid var(--border-color);
+            border-radius: var(--radius); padding: 16px 20px; 
+        }
+        .impact-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;}
+        .impact-title { font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 8px; color: var(--text-main); text-transform: uppercase;}
+        .impact-title svg { width: 16px; height: 16px; stroke-width: 1.5; color: var(--text-muted); }
+        .impact-value { font-size: 16px; font-weight: 800; color: var(--text-main);}
+        .progress-bar { width: 100%; height: 4px; background: var(--bg-light); border-radius: 2px; overflow: hidden; margin-bottom: 8px; }
+        .progress-fill { height: 100%; background: var(--text-main); border-radius: 2px; }
+        .impact-note { font-size: 12px; color: var(--text-muted); line-height: 1.4; margin-top: 8px;}
+
+        .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;}
+        .metric-card {
+            background: var(--bg-light); padding: 16px; border-radius: var(--radius);
+            text-align: center; border: 1px solid var(--border-color);
+        }
+        .metric-value { font-size: 20px; font-weight: 800; margin-bottom: 4px; color: var(--text-main);}
+        .metric-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;}
+        
+        .care-label {
+            display: flex; justify-content: space-between; align-items: center;
+            background: var(--bg-color); border: 1px solid var(--border-color);
+            padding: 16px 20px; border-radius: var(--radius); margin-bottom: 24px;
+        }
+        .care-symbol { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+        .care-symbol svg { width: 24px; height: 24px; stroke-width: 1; color: var(--text-main); }
+        .care-symbol span { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .care-list { list-style: none; padding: 0; }
+        .care-list li { position: relative; padding-left: 20px; margin-bottom: 12px; font-size: 13px; color: var(--text-muted); line-height: 1.5;}
+        .care-list li::before { content: "—"; position: absolute; left: 0; top: 0; font-size: 13px; color: var(--text-muted); }
+
+        .end-life-step { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--border-color);}
+        .end-life-step:last-child { border-bottom: none; padding-bottom: 0;}
+        .end-life-icon { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: var(--bg-light); border: 1px solid var(--border-color); flex-shrink: 0;}
+        .end-life-icon svg { width: 16px; height: 16px; stroke-width: 1.5; color: var(--text-main); }
+        .end-life-info h3 { font-size: 14px; margin-bottom: 4px; font-weight: 700;}
+        .end-life-info p { font-size: 13px; margin-bottom: 0; color: var(--text-muted); line-height: 1.5;}
+
+        .map-wrapper {
+            position: relative; width: 100%; height: 200px; background: var(--bg-map);
+            border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border-color);
+            margin-bottom: 16px; margin-top: 16px;
+            background-image: linear-gradient(#e5e5e5 1px, transparent 1px), linear-gradient(90deg, #e5e5e5 1px, transparent 1px);
+            background-size: 20px 20px; 
+        }
+        .map-pin {
+            position: absolute; width: 24px; height: 24px; background: var(--text-main);
+            border-radius: 50%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: transform 0.2s;
+            border: 2px solid var(--bg-color);
+        }
+        .map-pin:active, .map-pin.active { transform: scale(1.2); }
+        .map-info-card {
+            background: var(--bg-color); border: 1px solid var(--text-main);
+            border-radius: var(--radius); padding: 16px; display: none;
+            margin-top: 12px;
+        }
+        .map-info-card.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .pin-title { font-weight: 700; font-size: 14px; margin-bottom: 4px; text-transform: uppercase; }
+        .pin-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;}
+        .pin-tag { display: inline-block; background: var(--bg-light); padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; color: var(--text-muted); border: 1px solid var(--border-color);}
+
+        .info-box {
+            background: var(--bg-light); border: 1px solid var(--border-color);
+            padding: 16px; font-size: 13px; border-radius: var(--radius);
+            margin-top: 20px; line-height: 1.6; color: var(--text-muted);
+        }
+        .info-box strong { color: var(--text-main); display: block; margin-bottom: 4px;}
+
+        .limitations-box {
+            background: var(--text-light); color: var(--text-muted);
+            padding: 32px 20px; text-align: center; border-top: 1px solid var(--border-color);
+            background-color: var(--bg-light);
+        }
+        .limitations-box h3 { font-size: 11px; text-transform: uppercase; color: var(--text-main); margin-bottom: 12px; letter-spacing: 1px; font-weight: 700;}
+        .limitations-box p { margin-bottom: 12px; font-size: 12px; line-height: 1.5;}
+        .limitations-box p:last-child { margin-bottom: 0; }
+
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+
+    <header>
+        <div class="brand-logo">ZARA</div>
+        <div class="dpp-badge">Pasaporte Digital de Producto</div>
+    </header>
+
+    <div class="chip-nav">
+        <a href="#sec-resumen" class="chip">Resumen</a>
+        <a href="#sec-materiales" class="chip">Materiales</a>
+        <a href="#sec-quimicos" class="chip">Químicos</a>
+        <a href="#sec-trazabilidad" class="chip">Trazabilidad</a>
+        <a href="#sec-impacto" class="chip">Impacto</a>
+        <a href="#sec-cuidado" class="chip">Cuidado</a>
+        <a href="#sec-finvida" class="chip">Fin de Vida</a>
+        <a href="#sec-laboral" class="chip">Laboral</a>
+    </div>
+
+    <div id="sec-resumen">
+        <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Camiseta" class="hero-img">
+        
+        <div class="title-block">
+            <h1 id="dom-nombre">-</h1>
+            <div class="meta-tags">
+                <span class="meta-tag highlight">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <span id="dom-pais-origen-top">-</span>
+                </span>
+                <span class="meta-tag">Ref: <span id="dom-referencia">-</span></span>
+                <span class="meta-tag">Peso: <span id="dom-peso">-</span></span>
+            </div>
+        </div>
+
+        <section style="padding-top: 16px;">
+            <p>Bienvenido al DPP de esta prenda. Descubre con total transparencia qué la compone, cómo se fabricó y cómo alargar su ciclo de vida.</p>
+        </section>
+    </div>
+
+    <section id="sec-materiales">
+        <h2>Materiales y Composición</h2>
+        <p>Saber de qué está hecha una prenda es clave para alargar su vida útil y gestionar mejor su reciclaje.</p>
+        
+        <div class="composition-wrapper">
+            <div class="donut-container">
+                <div class="donut-chart" id="dom-donut">
+                    <div class="donut-inner">
+                        <span id="dom-donut-text">100%<br>algodón</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="comp-legend">
+                <div class="legend-item">
+                    <div>
+                        <div class="legend-title">
+                            <div class="legend-dot main"></div> 
+                            <span id="dom-mat-prin">-</span> (<span id="dom-porcentaje-prin-2">-</span>)
+                        </div>
+                        <div class="legend-origin">Origen: <span id="dom-origen-prin">-</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <strong>¿Por qué importa esto?</strong>
+            Cuanto más simple es la composición de una prenda, más fácil resulta su clasificación y reciclaje. En este caso, al estar formada por completo por algodón, su gestión al final de la vida útil es más sencilla que la de prendas con mezclas de fibras.
+        </div>
+    </section>
+
+    <section id="sec-quimicos">
+        <h2>Sustancias Químicas</h2>
+        <p>Esta prenda ha sido verificada respecto a la presencia de sustancias potencialmente peligrosas según la normativa europea REACH. Estos son los resultados disponibles.</p>
+        
+        <div class="impact-grid">
+            <div class="impact-card">
+                <div class="impact-header" style="margin-bottom: 0;">
+                    <div class="impact-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Formaldehído
+                    </div>
+                    <span style="font-size:12px; color:var(--text-muted);">No detectado</span>
+                </div>
+            </div>
+            <div class="impact-card">
+                <div class="impact-header" style="margin-bottom: 0;">
+                    <div class="impact-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Colorantes azoicos
+                    </div>
+                    <span style="font-size:12px; color:var(--text-muted);">No detectado</span>
+                </div>
+            </div>
+            <div class="impact-card">
+                <div class="impact-header" style="margin-bottom: 0;">
+                    <div class="impact-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Metales pesados (Pb, Cd, Cr)
+                    </div>
+                    <span style="font-size:12px; color:var(--text-muted);">No detectado</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-box" style="margin-top: 16px;">
+            <strong>¿Qué es REACH?</strong>
+            Reglamento europeo que regula las sustancias químicas para proteger la salud y el medio ambiente. Establece umbrales máximos para sustancias peligrosas en productos comercializados en la UE.
+        </div>
+    </section>
+
+    <section id="sec-trazabilidad">
+        <h2>Cadena de suministro</h2>
+        <p>Pulsa en cada etapa para ver el recorrido de esta prenda, desde el origen de sus materiales hasta su llegada al mercado.</p>
+        
+        <div class="accordion">
+            <div class="accordion-item">
+                <button class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title-container">
+                        <span>1. Origen de fibras</span>
+                        <span class="accordion-subtitle">Materia prima principal</span>
+                    </div>
+                    <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </button>
+                <div class="accordion-body">
+                    <div class="accordion-content">La materia prima principal de esta prenda procede de <strong id="dom-traz-1">-</strong>.</div>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <button class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title-container">
+                        <span>2. Hilado y tejido</span>
+                        <span class="accordion-subtitle">Transformación de la fibra en tela</span>
+                    </div>
+                    <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </button>
+                <div class="accordion-body">
+                    <div class="accordion-content">El hilado y la fabricación del tejido se realizaron en <strong id="dom-traz-2">-</strong>.</div>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <button class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title-container">
+                        <span>3. Confección</span>
+                        <span class="accordion-subtitle">Corte, costura y ensamblaje</span>
+                    </div>
+                    <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </button>
+                <div class="accordion-body">
+                    <div class="accordion-content">La confección final de la prenda tuvo lugar en <strong id="dom-traz-3">-</strong>.</div>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <button class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title-container">
+                        <span>4. Transporte intercontinental</span>
+                        <span class="accordion-subtitle">Traslado al mercado de venta</span>
+                    </div>
+                    <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </button>
+                <div class="accordion-body">
+                    <div class="accordion-content">El transporte intercontinental principal se realizó por <strong id="dom-traz-4">-</strong>, una opción que suele generar menos emisiones que el transporte aéreo.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="sec-impacto">
+        <h2>Impacto Ambiental</h2>
+        <p>Aquí puedes ver una estimación del impacto ambiental asociado a esta prenda.</p>
+        
+        <div class="impact-grid">
+            <div class="impact-card">
+                <div class="impact-header">
+                    <div class="impact-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19c1.5 0 2.5-1 2.5-2.5a2.5 2.5 0 00-2.1-2.4C18 10 13 10 11.5 14a4 4 0 00-4 7h10z"></path></svg>
+                        Huella de Carbono
+                    </div>
+                    <div class="impact-value" id="dom-co2">-</div>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" style="width: 45%;"></div></div>
+                <div class="impact-note">Equivale a conducir un coche aprox. 15 km.</div>
+            </div>
+
+            <div class="impact-card">
+                <div class="impact-header">
+                    <div class="impact-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"></path></svg>
+                        Consumo Hídrico
+                    </div>
+                    <div class="impact-value" id="dom-agua">-</div>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" style="width: 70%; background: #999;"></div></div>
+                <div class="impact-note">El consumo de agua de esta prenda está muy ligado al cultivo del algodón.</div>
+            </div>
+
+            <div class="impact-card">
+                <div class="impact-header">
+                    <div class="impact-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon><line x1="9" y1="3" x2="9" y2="18"></line><line x1="15" y1="6" x2="15" y2="21"></line></svg>
+                        Distancia Recorrida
+                    </div>
+                    <div class="impact-value" id="dom-dist">-</div>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" style="width: 85%; background: #ccc;"></div></div>
+                <div class="impact-note">Distancia aproximada recorrida desde el origen de los materiales hasta su llegada al mercado.</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="sec-cuidado">
+        <h2>Cuidado y Durabilidad</h2>
+        <p>Cómo cuidar esta prenda para que dure más tiempo.</p>
+        
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-value" id="dom-usos">-</div>
+                <div class="metric-label">Usos estimados</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="dom-duracion">-</div>
+                <div class="metric-label">Vida útil est.</div>
+            </div>
+        </div>
+
+        <div class="care-label">
+            <div class="care-symbol">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"></path><path d="M4 12v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6"></path><text x="12" y="17" font-size="6" font-weight="700" text-anchor="middle" fill="currentColor" stroke="none">30</text></svg>
+                <span>Lavado</span>
+            </div>
+            <div class="care-symbol">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 16H3L12 3z"></path><line x1="6" y1="21" x2="18" y2="3"></line></svg>
+                <span>Sin lejía</span>
+            </div>
+            <div class="care-symbol">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16h14a2 2 0 0 0 2-2v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v4h2z"></path><circle cx="12" cy="13" r="1" fill="currentColor" stroke="none"></circle></svg>
+                <span>Plancha</span>
+            </div>
+            <div class="care-symbol">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="12" cy="12" r="6"></circle><line x1="6" y1="6" x2="18" y2="18"></line><line x1="18" y1="6" x2="6" y2="18"></line></svg>
+                <span>Secadora</span>
+            </div>
+            <div class="care-symbol">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><line x1="5.6" y1="5.6" x2="18.4" y2="18.4"></line></svg>
+                <span>En seco</span>
+            </div>
+        </div>
+        
+        <ul class="care-list">
+            <li>Lava la prenda a un máximo de 30 ºC para reducir el consumo de energía.</li>
+            <li>Sécala al aire siempre que sea posible para evitar el desgaste de las fibras.</li>
+            <li>Lavarla del revés ayuda a conservar mejor el color exterior.</li>
+        </ul>
+    </section>
+
+    <section id="sec-finvida">
+        <h2>Gestión de Fin de Vida</h2>
+        <p>Estas son las opciones más recomendables para darle una segunda vida a la prenda o gestionarla correctamente al final de su uso. (<span id="dom-fin-actual" style="text-transform: lowercase;">-</span>).</p>
+        
+        <div class="card" style="padding: 0 20px;">
+            <div class="end-life-step">
+                <div class="end-life-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2.1l4 4-4 4"></path><path d="M3 12.2v-2a4 4 0 0 1 4-4h12.8M7 21.9l-4-4 4-4"></path><path d="M21 11.8v2a4 4 0 0 1-4 4H4.2"></path></svg>
+                </div>
+                <div class="end-life-info">
+                    <h3>1. Reutilización (opción prioritaria)</h3>
+                    <p>Si la prenda está en buen estado, la mejor opción es alargar su vida útil mediante donación, reutilización o venta de segunda mano.</p>
+                </div>
+            </div>
+            
+            <div class="end-life-step">
+                <div class="end-life-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+                </div>
+                <div class="end-life-info">
+                    <h3>2. Reciclaje Textil</h3>
+                    <p>Si la prenda ya no puede reutilizarse, puede depositarse en puntos de recogida textil. Su composición monomaterial, facilita procesos de reciclaje mecánico y la posible recuperación de fibra.</p>
+                </div>
+            </div>
+        </div>
+        
+        <h3 style="font-size: 14px; margin: 32px 0 8px 0; font-weight: 700; text-transform: uppercase;">Puntos de Recogida Cercanos</h3>
+        
+        <div class="map-wrapper">
+            <div class="map-pin" style="top: 40%; left: 30%;" onclick="showPinDetails('Tienda ZARA Centro', 'Punto de recogida en tienda. Aceptan ropa de cualquier marca.', 'Ropa y Calzado')"></div>
+            <div class="map-pin" style="top: 60%; left: 70%;" onclick="showPinDetails('Contenedor Textil Municipal', 'Contenedor en vía pública (Cáritas / Humana).', 'Ropa usada')"></div>
+            <div class="map-pin" style="top: 20%; left: 60%;" onclick="showPinDetails('Punto Limpio Móvil', 'Instalación municipal para gestión de residuos urbanos.', 'Textil y otros')"></div>
+        </div>
+
+        <div class="map-info-card" id="map-info">
+            <div class="pin-title" id="pin-title">Selecciona un punto en el mapa</div>
+            <div class="pin-desc" id="pin-desc">Toca los marcadores para ver las opciones de reciclaje.</div>
+            <div class="pin-tag" id="pin-tag" style="display: none;"></div>
+        </div>
+    </section>
+
+    <section id="sec-laboral">
+        <h2>Condiciones Laborales</h2>
+        <div class="impact-card" style="padding: 16px;">
+            <div class="impact-header" style="margin-bottom: 0;">
+                <div class="impact-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    Auditoría social
+                </div>
+                <div class="impact-value" id="dom-laboral" style="font-size: 14px; font-weight: 500; color: var(--text-muted);">-</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="limitations-box">
+        <h3>Limitaciones del Prototipo</h3>
+        <p>Este Pasaporte Digital de Producto es una simulación conceptual y visual desarrollada exclusivamente con fines académicos (TFM).</p>
+        <p>Los datos ambientales mostrados son provisionales. En un caso real, su exactitud dependería de auditorías y trazabilidad corporativa real.</p>
+    </div>
+
+</div>
+
+<script>
+    const datosCamiseta = {
+        producto: "Camiseta Básica",
+        marca: "ZARA",
+        referencia: "0001/2026/TFM",
+        peso: "100 g",
+        materialPrincipal: "algodón",
+        porcentajePrincipal: 100,
+        origenFibras: "China",
+        origenFibrasTraz: "China",
+        produccionHilos: "China",
+        confeccion: "Bangladesh",
+        transporte: "Barco",
+        sustanciasQuimicas: "Pendiente de verificación",
+        condicionesLaborales: "Pendiente de verificación",
+        emisionesCO2: "2,42 kg CO2 eq.",
+        consumoAgua: "994 Litros",
+        distanciaRecorrida: "19.307 km",
+        usosEstimados: "47",
+        duracionEstimada: "3 años",
+        disposicionFinal: "Incineración"
+    };
+
+    function inyectarDatos() {
+        try {
+            document.getElementById("dom-nombre").textContent = datosCamiseta.producto;
+            document.getElementById("dom-referencia").textContent = datosCamiseta.referencia;
+            document.getElementById("dom-peso").textContent = datosCamiseta.peso;
+            document.getElementById("dom-pais-origen-top").textContent = datosCamiseta.confeccion;
+            document.getElementById("dom-mat-prin").textContent = datosCamiseta.materialPrincipal.charAt(0).toUpperCase() + datosCamiseta.materialPrincipal.slice(1);
+            document.getElementById("dom-porcentaje-prin-2").textContent = datosCamiseta.porcentajePrincipal + "%";
+            document.getElementById("dom-origen-prin").textContent = datosCamiseta.origenFibras;
+            document.getElementById("dom-donut-text").innerHTML = datosCamiseta.porcentajePrincipal + "%<br>" + datosCamiseta.materialPrincipal;
+            
+            const chart = document.getElementById("dom-donut");
+            if(chart) chart.style.background = `conic-gradient(var(--text-main) ${datosCamiseta.porcentajePrincipal}%, #ccc ${datosCamiseta.porcentajePrincipal}% 100%)`;
+
+            document.getElementById("dom-traz-1").textContent = datosCamiseta.origenFibrasTraz;
+            document.getElementById("dom-traz-2").textContent = datosCamiseta.produccionHilos;
+            document.getElementById("dom-traz-3").textContent = datosCamiseta.confeccion;
+            document.getElementById("dom-traz-4").textContent = datosCamiseta.transporte;
+            document.getElementById("dom-co2").textContent = datosCamiseta.emisionesCO2;
+            document.getElementById("dom-agua").textContent = datosCamiseta.consumoAgua;
+            document.getElementById("dom-dist").textContent = datosCamiseta.distanciaRecorrida;
+            document.getElementById("dom-usos").textContent = datosCamiseta.usosEstimados;
+            document.getElementById("dom-duracion").textContent = datosCamiseta.duracionEstimada;
+            document.getElementById("dom-fin-actual").textContent = datosCamiseta.disposicionFinal;
+            document.getElementById("dom-laboral").textContent = datosCamiseta.condicionesLaborales;
+        } catch(e) {
+            console.error("Error inyectando datos:", e);
+        }
+    }
+
+    inyectarDatos();
+
+    function toggleAccordion(btn) {
+        const item = btn.parentElement;
+        item.classList.toggle('active');
+    }
+
+    function showPinDetails(title, desc, tag) {
+        document.querySelectorAll('.map-pin').forEach(pin => pin.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+
+        const infoCard = document.getElementById('map-info');
+        document.getElementById('pin-title').textContent = title;
+        document.getElementById('pin-desc').textContent = desc;
+        
+        const tagEl = document.getElementById('pin-tag');
+        tagEl.textContent = "Acepta: " + tag;
+        tagEl.style.display = 'inline-block';
+        
+        infoCard.classList.remove('active');
+        void infoCard.offsetWidth; 
+        infoCard.classList.add('active');
+    }
+</script>
+
+</body>
+</html>
